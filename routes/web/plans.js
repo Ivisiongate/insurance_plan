@@ -4,7 +4,7 @@ const plans = (router) => {
 
     router.get('/plans/prices', async (req,res)=>{
 
-        const pricing = await db('plans').min('price as minPrice').max('price as maxPrice');
+        const pricing = await db('plans').min('baseprice as minPrice').max('baseprice as maxPrice');
 
         const minPrice = pricing[0].minPrice;
         const maxPrice = pricing[0].maxPrice;
@@ -43,14 +43,14 @@ const plans = (router) => {
                 queryBuilder.orWhereIn('ambulatorycoverages.coverageid',coverages)
             }
             if (minPrice && minPrice > 0){
-                queryBuilder.where('plans.price','>=',minPrice);
+                queryBuilder.where('plans.baseprice','>=',minPrice);
             }
             if (maxPrice && maxPrice > 0){
-                queryBuilder.where('plans.price','<=',maxPrice);
+                queryBuilder.where('plans.baseprice','<=',maxPrice);
             }
         })
         .groupBy('plans.id')
-        .orderBy(sortPrice ? 'plans.price' : 'plans.id',sortPrice ? sortPrice : 'DESC');
+        .orderBy(sortPrice ? 'plans.baseprice' : 'plans.id',sortPrice ? sortPrice : 'DESC');
 
         const totalCount = await getModel().count('plans.id as count');
         let plans = await getModel()
