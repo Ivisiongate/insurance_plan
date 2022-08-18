@@ -10,5 +10,6 @@ router = require('./regions')(router);
 router = require('./plantypes')(router);
 router = require('./coverages')(router);
 router = require('./plans')(router);
+router = require('./currency')(router);
 
 module.exports = router;

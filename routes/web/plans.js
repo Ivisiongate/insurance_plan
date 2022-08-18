@@ -24,7 +24,7 @@ const plans = (router) => {
         .join('hospitalcoverages','hospitalcoverages.planid','plans.id')
         .join('ambulatorycoverages','ambulatorycoverages.planid','plans.id')
         .join('companies','companies.id','plans.company')
-        .select('plans.*','plantypes.name as planTypeName','regions.name as regionName','companies.name as companyName','companies.logo as companyLogo')
+        .select('plans.*','plantypes.name as planTypeName','regions.name as regionName','companies.name as companyName','companies.logo as companyLogo','companies.ges as companyGes')
         .modify(function(queryBuilder) {
             if (search) {
                 queryBuilder.whereRaw(`LOWER(plans.name) LIKE ? OR LOWER(plans.code) LIKE ?`, [`%${search.toLowerCase()}%`,`%${search.toLowerCase()}%`]).orderBy('id','DESC');

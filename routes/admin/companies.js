@@ -38,14 +38,14 @@ const companies = (router) => {
     router.post('/companies',[verifyToken,upload.single('logo.rawFile')], async (req,res)=>{
     
         let response = {status: false, message: 'name is required',data: {}};
-        const {name} = req.body;
+        const {name,ges} = req.body;
     
-        if (name){
+        if (name && ges){
             let logo = null;
             if ( req.file ){
                 logo = BASE_URL+'/'+req.file.filename
             }
-            const inserted_id = await db('companies').insert({name,logo});
+            const inserted_id = await db('companies').insert({name,ges,logo});
             const company = await db('companies').where({id:inserted_id}).first();
             response = {status: true, message: 'company added successfully',data: company};
         }
@@ -57,7 +57,7 @@ const companies = (router) => {
     
         let response = {status: false, message: 'Invalid company id',data: {}};
         const {id} = req.params;
-        const {name} = req.body;
+        const {name,ges} = req.body;
     
         let company = await db('companies').where({id}).first();
         
@@ -65,10 +65,10 @@ const companies = (router) => {
         if ( req.file ){
             logo = BASE_URL+'/'+req.file.filename
         }
-        if ( !name ){
-            response = {status: false, message: 'name is required to update', data: {}};
+        if ( !name || !ges ){
+            response = {status: false, message: 'name & ges is required to update', data: {}};
         }else if (company){
-            await db('companies').where({id:company.id}).update({name,logo});
+            await db('companies').where({id:company.id}).update({name,ges,logo});
             company = await db('companies').where({id:company.id}).first();
             response = {status: true, message: 'company updated successfully',data: company};
         }

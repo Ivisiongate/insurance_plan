@@ -81,10 +81,10 @@ const plans = (router) => {
     router.post('/plans',verifyToken, async (req,res)=>{
 
         let response = {status: false, message: 'all fields are required',data: {}};
-        const {name,code,baseprice,price,region,company,plantype,hospitalcoverages,hospitalcoverage_percentages,ambulatorycoverages,ambulatorycoverage_percentages} = req.body;
+        const {name,code,baseprice,region,company,plantype,hospitalcoverages,hospitalcoverage_percentages,ambulatorycoverages,ambulatorycoverage_percentages} = req.body;
     
-        if (name && code && baseprice && price && region && company && plantype){
-            const inserted_id = await db('plans').insert({name,code,baseprice,price,region,company,plantype});
+        if (name && code && baseprice && region && company && plantype){
+            const inserted_id = await db('plans').insert({name,code,baseprice,region,company,plantype});
             const plan = await db('plans').where({id:inserted_id}).first();
 
             if ( hospitalcoverages && hospitalcoverages.length ){
@@ -111,15 +111,15 @@ const plans = (router) => {
     
         let response = {status: false, message: 'Invalid plan id',data: {}};
         const {id} = req.params;
-        const {name,code,baseprice,price,region,company,plantype,hospitalcoverageids,hospitalcoverage_percentages,ambulatorycoverageids,ambulatorycoverage_percentages} = req.body;
+        const {name,code,baseprice,region,company,plantype,hospitalcoverageids,hospitalcoverage_percentages,ambulatorycoverageids,ambulatorycoverage_percentages} = req.body;
     
         
         let plan = await db('plans').where({id}).first();
         
-        if (!name || !code || !baseprice || !price || !region || !company || !plantype){
+        if (!name || !code || !baseprice || !region || !company || !plantype){
             response = {status: false, message: 'all fields are required to update', data: {}};
         }else if (plan){
-            await db('plans').where({id:plan.id}).update({name,code,baseprice,price,region,company,plantype});
+            await db('plans').where({id:plan.id}).update({name,code,baseprice,region,company,plantype});
             plan = await db('plans').where({id:plan.id}).first();
 
             await db('hospitalcoverages').where({planid:plan.id}).delete();
